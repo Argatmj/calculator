@@ -35,6 +35,7 @@ function operate(num1, op, num2) {
 
 const display = document.querySelector(".display");
 const equal = document.querySelector("#equals")
+const dot = document.querySelector("#dot")
 const del = document.querySelector("#del");
 const clear = document.querySelector("#clr");
 const numBtns = document.querySelectorAll(".num");
@@ -57,11 +58,16 @@ clear.addEventListener("click",() => {
 
 equal.addEventListener("click", () => {
     secondNum = parseFloat(display.innerHTML);
-    console.log(firstNum);
-    console.log(secondNum);
-    console.log(operator);
-    let result = operate(firstNum,operator,secondNum);
-    display.innerHTML = result;
+    if (operator === '÷' && secondNum === 0) {
+        display.innerHTML = "Nice try!";
+    } else {
+        let result = operate(firstNum, operator, secondNum);
+        if (result !== undefined) {
+            display.innerHTML = result;
+        } else {
+            display.innerHTML = "Error";
+        }
+    } 
     firstNum = null;
     secondNum = null;
     operator = null;
@@ -82,9 +88,16 @@ opsBtns.forEach((op) => op.addEventListener("click", (event) => {
     count++;
 }));
 
+dot.addEventListener("click", (event) => {
+    let text = display.innerHTML;
+    if(!text.includes(".")){
+        display.innerHTML = text.concat(`${event.target.innerHTML}`); 
+    }
+})
+
 numBtns.forEach((button) => button.addEventListener("click", (event) => {
     let text = display.innerHTML;
-    if(flag){
+    if(flag || isNaN(text)){
         text = '';
         flag = false;
     }

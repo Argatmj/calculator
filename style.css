@@ -34,7 +34,7 @@ body{
 
 .buttons{
     width: 360px;
-    height: 360px;
+    height: 390px;
     border: 1px solid black;
     display: flex;
     flex-wrap: wrap;
