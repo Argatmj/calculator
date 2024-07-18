@@ -1,8 +1,9 @@
 let firstNum = null;
 let secondNum = null;
 let operator = null;
+let numValid;
 let flag = false;
-let count = 0;
+let consec = false;
 
 function add(num1, num2) {
   return num1 + num2;
@@ -45,7 +46,7 @@ function reset(){
   operator = null;
   flag = false;
   consec = false;
-  count = 0;
+  numValid = false;
 }
 
 const display = document.querySelector(".display");
@@ -75,7 +76,7 @@ equal.addEventListener("click", () => {
     display.innerHTML = "Nice try!";
   } else {
     let result = operate(firstNum, operator, secondNum);
-    if (result !== undefined && !isNaN(result)) {
+    if (result !== undefined && !isNaN(result) && numValid) {
       display.innerHTML = roundToTwo(result);
     }
   }
@@ -83,18 +84,20 @@ equal.addEventListener("click", () => {
 });
 
 opsBtns.forEach((op) => op.addEventListener("click", (event) => {
-    if (count !== 1) {
-        firstNum = parseFloat(display.innerHTML);
-    } else{
-     secondNum = parseFloat(display.innerHTML);
-     firstNum = operate(firstNum, operator, secondNum);
-     display.innerHTML = roundToTwo(firstNum);
-     secondNum = null;
-     count = 0;
-    }
-    operator = event.target.innerHTML;
-    flag = true;
-    count++;
+    if (consec) {
+        operator = event.target.innerHTML;
+      } else {
+        if (firstNum === null) {
+          firstNum = parseFloat(display.innerHTML);
+        } else if (operator !== null) {
+          secondNum = parseFloat(display.innerHTML);
+          firstNum = operate(firstNum, operator, secondNum);
+          display.innerHTML = roundToTwo(firstNum);
+        }
+        operator = event.target.innerHTML;
+        flag = true;
+        consec = true;
+      }
   })
 );
 
@@ -108,6 +111,7 @@ dot.addEventListener("click", (event) => {
 
 numBtns.forEach((button) =>
   button.addEventListener("click", (event) => {
+    if (firstNum !== null && operator !== null) numValid = true;
     let text = display.innerHTML;
     if (flag || isNaN(text)) {
       text = "";
